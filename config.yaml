@@ -1,0 +1,14 @@
+database:
+  url: "postgresql://user:password@db:5432/mydatabase"
+
+files:
+  - path: "data/encounters_cleaned.csv"
+    table: "encounters"
+  - path: "data/organizations.csv"
+    table: "organizations"
+  - path: "data/patients.csv"
+    table: "patients"
+  - path: "data/payers.csv"
+    table: "payers"
+  - path: "data/procedures.csv"
+    table: "procedures"
