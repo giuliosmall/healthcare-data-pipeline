@@ -5,6 +5,7 @@ def read_data(file_path: str) -> pd.DataFrame:
     return pd.read_csv(file_path)
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    # lowercas column name
     df.columns = df.columns.str.lower()
 
     # ensure 'start' and 'stop' are datetime
@@ -15,7 +16,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=['start', 'stop'])
 
     # create a surrogate key to remove duplicates
-    df['surrogate_key'] = df['patient'].astype(str) + '-' + df['encounter'].astype(str) + '-' + df['code'].astype(str)
+    df['surrogate_key'] = df['patient'].astype(str) + '-' + df['id'].astype(str) + '-' + df['code'].astype(str)
     df = df.drop_duplicates(subset=['surrogate_key'])
 
     # duration of the procedure in seconds
@@ -35,10 +36,8 @@ def save_cleaned_data(df: pd.DataFrame, output_path: str):
 def process_data(file_path: str, output_path: str, base_cost_limit: float):
     df = read_data(file_path)
     cleaned_df = clean_data(df)
-
     # exclude procedures more expensive than base_cost_limit
-    cleaned_df = cleaned_df[cleaned_df['base_cost'] <= base_cost_limit]
-
+    cleaned_df = cleaned_df[cleaned_df['base_encounter_cost'] <= base_cost_limit]
     # drop the surrogate key column
     cleaned_df = cleaned_df.drop(columns=['surrogate_key'])
 
