@@ -1,19 +1,10 @@
 import pandas as pd
-from sqlalchemy import create_engine
 import yaml
 import logging
 import os
-from contextlib import contextmanager
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-import pandas as pd
-from sqlalchemy import create_engine
-import yaml
-import logging
-import os
-from contextlib import contextmanager
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def upload_to_postgres(file_path, table_name, engine):
     """
@@ -37,6 +28,7 @@ def upload_to_postgres(file_path, table_name, engine):
         logging.info(f"Uploaded {file_path} to {table_name} table successfully.")
     except Exception as e:
         logging.error(f"Failed to upload {file_path} to {table_name} table: {e}")
+
 
 if __name__ == "__main__":
     try:
