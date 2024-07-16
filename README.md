@@ -1,41 +1,173 @@
-# Welcome to the Mighty Data Engineering Test 
+# Mighty Data Engineer Test
 
-we are a small patient advocat group (PAG) who help and monitor patients with various diseases. We have a contract with United Healthcare and Humana, clients of the firm. Although we are not allowed to see all details of United healthcare, we are allowed to see some aggregate data. The same goes for patients without a health insurance.
+## Overview
 
-The sample dataset that we have managed acquire exists of patient data, procedures, insurance companies, a single hospital and a linking file. 
+This project demonstrates an ETL (Extract, Transform, Load) pipeline that processes healthcare data. 
+The pipeline extracts data from various CSV files, transforms it by cleaning and normalizing, and then loads it 
+into a PostgreSQL database. The project also includes data analysis queries to rank payers by costs paid, 
+find the top 5 highest costing patients, and the top 5 most expensive procedures on a daily basis.
 
-We would like to get a more accurate, and live reporting of this data. In the past the excel files were fine, but nowadays its becoming too much and therefore harder to read. Some of our Program managers are struggling to know what is what. For the client reporting we are not always allowed to show them all the data, and since we are hosting the data we are not allowed to share personal details. Some clients also request an extract of the patient data specific to them. 
+## Prerequisites
 
-We are currently in the process of setting up a database connection to tableau, since we already have a salesforce account and tableau can be used for reporting. We have an airbyte instance to run a few etls on a daily basis to a reporting data warehouse (postrgres database). This database is also one which we are connecting to tableau. We already have some way of creating excel files and providing them to our clients. Most of our infratstructure runs on AWS, and we use python and SQL as our main languages for many applications and data analysis. We have started a transition to use DBT in stead of SQL, but Rome was not built in a day. 
+- Docker
+- Docker Compose
+- Make
 
-## Task 1: Data Cleaning
+## Project Structure
 
-Starting with and looking at input/procedures.csv we would like you to create a script that cleans the data and removes duplicates. Where possible slightly alter the data for the purpose of cleaning it, and having less duplicates. 
+```
+/MightyDataEngineerTest
+|-- /ETL
+|   |-- /data
+|   |-- /scripts
+|       |-- data_cleaning.py
+|       |-- data_upload.py
+|       |-- create_data_marts.py
+|       |-- main_etl_process.py
+|       |-- queries.sql
+|-- docker-compose.yaml
+|-- config.yaml
+|-- Makefile
+```
 
-next add one new column to the csv that shows the overall duration of the procedure in seconds
+## Setup and Running the ETL Pipeline
 
-follwing this, extract the year, month (name), week (number) and days (name) into new columns 
+### 1. Clone the Repository
 
-Finally, use python to filter out the procedures that cost more than 30000 per day. 
+```
+git clone <https://github.com/giuliosmall/MightyDataEngineerTest.git>
+cd MightyDataEngineerTest
+```
 
-please include a small reasoning in code, to explain the purpose of use and reasoning of use. 
+### 2. Prepare the Environment
 
-## Task 2 ETL pipeline
+Ensure Docker and Docker Compose are installed. Also, make sure Make is available on your system.
 
-extract the data from input, transform it (specifically for procedures.csv) and load it into a relational database. It should suffice to only do the cleaning from task one, but do take into account the effects it has on the other data. Where possible normalize the data even more.
+### 3. Configure Environment Variables
 
-finally use this data to write a query to rank the payers, by costs payed. Write a query to get the top 5 highest costing patients, and a query to get the top 5 most expensive procedures on a daily basis (median). 
+Ensure the environment variables are set correctly in `docker-compose.yaml`:
 
+```
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  etl:
+    build:
+      context: ./ETL
+      dockerfile: Dockerfile
+    command: python scripts/main_etl_process.py
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mydatabase
+      DB_USER: user
+      DB_PASSWORD: password
+    volumes:
+      - ./ETL/data:/app/data
+      - ./ETL/scripts:/app/scripts
+      - ./config.yaml:/app/config.yaml
+      - ./ETL/scripts/queries.sql:/app/scripts/queries.sql
+volumes:
+  db-data:
+```
+### Security Disclaimer
 
-## Task 3 Data marts
+All the exposed passwords and database names in this project are meant to speed up the Docker development process. 
+This is a practice I would never release in production. In a real-world scenario, ensure to use environment variables 
+or secret management tools to handle sensitive information securely.
 
-After succesfully extracting the data and loading it into a relational database, create two new separate data marts about the data from both of our clients (united healthcare and humana). If you feel the need/usefullness of staging tables, you can use them. Please use as much detail as possible for the data mart, but try and keep it clean. It is preferred to have the least amount of duplicates, and in all honesty we do not really care about patients, but we do care about those who have to pay for procedures themselves.
+### 4. Use the Makefile
 
-## Notes
-We know some of the questions are vague and maybe impossible to do given the tools you are using. This is on purpose. We want to see how you would handle these situations, therefore it is okay to include an explanation of the process/solution that you would suggest had you been using the tools that do support these requirements. 
+The `Makefile` provides convenient commands to manage the Docker containers.
 
-## Instructions
+#### Build and Run the Docker Containers
 
-Step one is to go to: "https://github.com/myTomorrows/MightyDataEngineeringTest" and download this as a zip, or fork it into your own private repository (preferably github). 
-Step 2 is to give us access to this repository. You do not have to give us access immediately, this can be done after you have completed the test as well. You will be given a notice who to add to your repository. 
-Finally, you may do the tasks described above in any way you like. Input contains the data that is used for the test and this readme file contains the questions. Good luck and above all, have fun!
+```
+make
+```
+
+or
+
+```
+make all
+```
+
+#### Stop the Docker Containers
+
+```
+make down
+```
+
+#### Rebuild and Run the Docker Containers
+
+```
+make rebuild
+```
+
+#### Follow the Logs of the Docker Containers
+
+```
+make logs
+```
+
+#### Clean Up Docker Containers, Networks, and Volumes
+
+```
+make clean
+```
+
+#### Access the PostgreSQL Container
+
+```
+make psql
+```
+
+## Data Analysis
+
+The project includes SQL queries to perform data analysis:
+
+1. Rank Payers by Costs Paid
+
+2. Top 5 Highest Costing Patients
+
+3. Top 5 Most Expensive Procedures on a Daily Basis (Median)
+
+The results of these queries are stored in the following tables:
+
+- payer_ranking
+- top_5_patients
+- top_5_procedures_daily
+
+### Example Queries to Check Results
+
+After running the ETL process, you can check the results by accessing the PostgreSQL database:
+
+1. Connect to the PostgreSQL Container
+
+```
+make psql
+```
+
+2. Run SQL Queries (pick one)
+```
+SELECT * FROM payer_ranking LIMIT 10;
+SELECT * FROM top_5_patients LIMIT 10;
+SELECT * FROM top_5_procedures_daily LIMIT 10;
+```
+
+## Conclusion
+
+This project demonstrates a complete ETL pipeline using Docker, Docker Compose, and Python. 
+The Makefile simplifies the management of the Docker environment, making it easy to build, run, and clean up the 
+ETL pipeline.
