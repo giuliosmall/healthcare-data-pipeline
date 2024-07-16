@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, text
 import yaml
 import logging
 
-# Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
@@ -14,7 +13,7 @@ def load_queries(filename):
 
 
 def create_data_marts(engine, queries):
-    with engine.begin() as conn:  # Use engine.begin() to handle transactions
+    with engine.begin() as conn:  # use engine.begin() to handle multiple transactions
         try:
             logging.info("Dropping existing data marts if they exist.")
             conn.execute(text("DROP TABLE IF EXISTS united_healthcare_data;"))
@@ -24,7 +23,7 @@ def create_data_marts(engine, queries):
             conn.execute(text("DROP TABLE IF EXISTS top_5_procedures_daily;"))
 
             for query in queries:
-                logging.info(f"Executing query: {query[:30]}...")  # Log only the start of the query
+                logging.info(f"Executing query: {query[:30]}...") # log only the start of the query
                 conn.execute(text(query))
 
             logging.info("Data marts and analysis tables created successfully.")

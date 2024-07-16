@@ -19,14 +19,14 @@ def substitute_config_placeholders():
 def main():
     substitute_config_placeholders()
 
-    # Step 1: Clean the data
+    # clean the data
     subprocess.run(
         ["python", "scripts/data_cleaning.py", "/app/data/encounters.csv", "/app/data/encounters_cleaned.csv", "30000"])
 
-    # Step 2: Upload cleaned data to PostgreSQL
+    # upload cleaned data to PostgreSQL
     subprocess.run(["python", "scripts/data_upload.py"])
 
-    # Step 3: Create data marts
+    # create data marts
     subprocess.run(["python", "scripts/create_data_marts.py"])
 
 
