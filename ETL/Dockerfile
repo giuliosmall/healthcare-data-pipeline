@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY .. .
 
-CMD ["python", "scripts/main_etl.py"]
+CMD ["python"]
