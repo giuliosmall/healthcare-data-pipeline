@@ -2,9 +2,9 @@
 
 ## Overview
 
-This project demonstrates an ETL (Extract, Transform, Load) pipeline that processes healthcare data. 
-The pipeline extracts data from various CSV files, transforms it by cleaning and normalizing, and then loads it 
-into a PostgreSQL database. The project also includes data analysis queries to rank payers by costs paid, 
+This project demonstrates an ETL (Extract, Transform, Load) pipeline that processes healthcare data.
+The pipeline extracts data from various CSV files, transforms it by cleaning and normalizing, and then loads it
+into a PostgreSQL database. The project also includes data analysis queries to rank payers by costs paid,
 find the top 5 highest costing patients, and the top 5 most expensive procedures on a daily basis.
 
 ## Prerequisites
@@ -83,9 +83,16 @@ volumes:
 ```
 ### Security Disclaimer
 
-All the exposed passwords and database names in this project are meant to speed up the Docker development process. 
-This is a practice I would never release in production. In a real-world scenario, ensure to use environment variables 
+All the exposed passwords and database names in this project are meant to speed up the Docker development process.
+This is a practice I would never release in production. In a real-world scenario, ensure to use environment variables
 or secret management tools to handle sensitive information securely.
+
+### Data Modeling Disclaimer
+
+This project doesn’t follow data modeling best practices like the “Medallion” approach. Here, the entire data modeling 
+exercise is potentially exposed to downstream stakeholders. In a real-life scenario, this should not be the approach. 
+There should be only one layer dedicated to final transformation to be exposed to Business/BI, with other layers kept 
+internal to the ETL processes.
 
 ### 4. Use the Makefile
 
@@ -168,6 +175,6 @@ SELECT * FROM top_5_procedures_daily LIMIT 10;
 
 ## Conclusion
 
-This project demonstrates a complete ETL pipeline using Docker, Docker Compose, and Python. 
-The Makefile simplifies the management of the Docker environment, making it easy to build, run, and clean up the 
+This project demonstrates a complete ETL pipeline using Docker, Docker Compose, and Python.
+The Makefile simplifies the management of the Docker environment, making it easy to build, run, and clean up the
 ETL pipeline.
