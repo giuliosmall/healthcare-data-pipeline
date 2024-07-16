@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  etl:
+    build:
+      context: ./ETL
+      dockerfile: Dockerfile
+    command: python scripts/main_etl_process.py
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mydatabase
+      DB_USER: user
+      DB_PASSWORD: password
+    volumes:
+      - ./ETL/data:/app/data
+      - ./ETL/scripts:/app/scripts
+      - ./config.yaml:/app/config.yaml
+      - ./ETL/scripts/queries.sql:/app/scripts/queries.sql
+volumes:
+  db-data:
