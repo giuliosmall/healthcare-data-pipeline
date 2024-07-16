@@ -97,7 +97,7 @@ CREATE TABLE top_5_patients AS
 -- get top 5 most expensive procedures on a daily basis by median
 CREATE TABLE top_5_procedures_daily AS
     SELECT
-        DATE_TRUNC('day', e.start::timestamp) AS procedure_day,
+        DATE_TRUNC('day', e.start::TIMESTAMP) AS procedure_day,
         e.code,
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY e.base_encounter_cost) AS median_cost
     FROM
