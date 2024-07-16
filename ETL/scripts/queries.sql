@@ -103,7 +103,9 @@ CREATE TABLE top_5_procedures_daily AS
     FROM
         encounters AS e
     GROUP BY
-        procedure_day, e.code
+        procedure_day,
+        e.code
     ORDER BY
-        procedure_day DESC, median_cost DESC
+        procedure_day DESC,
+        median_cost DESC
     LIMIT 5;
