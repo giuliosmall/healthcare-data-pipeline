@@ -1,9 +1,16 @@
 import pandas as pd
 
 def read_data(file_path: str) -> pd.DataFrame:
+    """
+    Read a CSV file and return a pandas DataFrame.
+    """
     return pd.read_csv(file_path)
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean the data by converting columns to lowercase, converting 'start' and 'stop' to datetime
+    and removing duplicates.
+    """
     # lowercas column name
     df.columns = df.columns.str.lower()
 
@@ -30,9 +37,15 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def save_cleaned_data(df: pd.DataFrame, output_path: str):
+    """
+    Save the cleaned data to a CSV file.
+    """
     df.to_csv(output_path, index=False)
 
 def process_data(file_path: str, output_path: str, base_cost_limit: float):
+    """
+    Read data from a CSV file, clean the data, exclude procedures more expensive than base_cost_limit
+    """
     df = read_data(file_path)
     cleaned_df = clean_data(df)
     # exclude procedures more expensive than base_cost_limit

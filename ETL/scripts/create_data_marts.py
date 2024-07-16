@@ -6,6 +6,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 def load_queries(filename):
+    """
+    Load SQL queries from a file. The queries are separated by a semicolon.
+    """
     with open(filename, 'r') as file:
         queries = file.read().split(';')
         queries = [query.strip() for query in queries if query.strip()]
@@ -13,6 +16,9 @@ def load_queries(filename):
 
 
 def create_data_marts(engine, queries):
+    """
+    Create data marts and analysis tables in the database.
+    """
     with engine.begin() as conn:  # use engine.begin() to handle multiple transactions
         try:
             logging.info("Dropping existing data marts if they exist.")
