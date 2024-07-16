@@ -15,17 +15,6 @@ from contextlib import contextmanager
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-@contextmanager
-def get_db_engine(db_url):
-    """
-    Context manager for creating and closing a database engine.
-    """
-    engine = create_engine(db_url)
-    try:
-        yield engine
-    finally:
-        engine.dispose()
-
 def upload_to_postgres(file_path, table_name, engine):
     """
     Upload a CSV file to a PostgreSQL table.
