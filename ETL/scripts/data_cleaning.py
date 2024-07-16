@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 
 def read_data(file_path: str) -> pd.DataFrame:
     return pd.read_csv(file_path)
