@@ -1,4 +1,3 @@
--- Drop existing data marts if they exist
 DROP TABLE IF EXISTS united_healthcare_data;
 DROP TABLE IF EXISTS humana_data;
 DROP TABLE IF EXISTS payer_ranking;
@@ -11,7 +10,7 @@ SELECT
 FROM
     encounters AS e
 LEFT JOIN
-    payers pa
+    payers AS pa
     ON e.payer = pa.id
 WHERE
     pa.name = 'UnitedHealthcare'
