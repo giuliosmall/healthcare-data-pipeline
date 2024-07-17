@@ -35,7 +35,7 @@ find the top 5 highest costing patients, and the top 5 most expensive procedures
 ### 1. Clone the Repository
 
 ```
-git clone <https://github.com/giuliosmall/MightyDataEngineerTest.git>
+git clone https://github.com/giuliosmall/MightyDataEngineerTest.git
 cd MightyDataEngineerTest
 ```
 
