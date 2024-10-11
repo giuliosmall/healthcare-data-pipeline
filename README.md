@@ -1,5 +1,4 @@
-# Mighty Data Engineer Test
-
+# Healthcare Data Pipeline
 ## Overview
 
 This project demonstrates an ETL (Extract, Transform, Load) pipeline that processes healthcare data.
